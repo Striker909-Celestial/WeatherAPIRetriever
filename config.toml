@@ -1,0 +1,31 @@
+[location]
+ip = "" # If left blank, will default to your public IP address
+
+# Uncomment to specify longitude and latitude
+# If left commented, will use ip to find longitude and latitude
+# longitude = 0.0
+# latitude = 0.0
+
+[location.api]
+url = "http://ip-api.com/json"
+params = { "ip"="{location.ip}" }
+longitude_loc = "lon" # Location of longitude in the returned JSON file
+latitude_loc = "lat" # Location of latitude in the returned JSON file
+
+[weather]
+# api_key = "" # Paste your OpenWeatherMapAPI key here (or a key for a different API service if used)
+api_key_path = "open_weather_map_api_key.txt" # Paste the path to your API key here if you don't paste your API key directly
+
+[weather.apis.current]
+url = "https://api.openweathermap.org/data/2.5/weather"
+params = { "lon"="{location.longitude}", "lat"="{location.latitude}", "appid"="{weather.api_key}", "units"="metric" }
+
+[weather.apis.forecast]
+url = "https://api.openweathermap.org/data/2.5/forecast"
+params = { "lon"="{location.longitude}", "lat"="{location.latitude}", "appid"="{weather.api_key}", "units"="metric" }
+
+[output]
+file_type = "json" # Also supports yaml and toml
+file_name = "weather-data-%Y%m%dT%H%M%S%z" # Uses strftime formatting
+output_dir = "weather_data"
+clear_old_data = true # If old files from previous retrivals should be deleted upon the retrival of new data
