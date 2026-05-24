@@ -89,10 +89,12 @@ class WeatherData:
             output_string = self.to_yaml()
         elif file_type == 'toml':
             output_string = self.to_toml()
-        if self.config['output']['clear_old_data']:
-            if os.path.exists(output_dir):
+        if os.path.exists(output_dir):
+            if self.config['output']['clear_old_data']:
                 shutil.rmtree(output_dir)
-        os.makedirs(output_dir)
+                os.makedirs(output_dir)
+        else:
+            os.makedirs(output_dir)
 
         with open(output_path, 'w') as f:
             f.write(output_string)
