@@ -11,11 +11,12 @@ import json
 import yaml
 import toml
 
+CURRENT_PATH = os.path.abspath(os.path.dirname(__file__))
 CONFIG_ADDRESS = "config.toml"
 
 class WeatherData:
     def __init__(self, config_address):
-        with open(config_address, 'rb') as f:
+        with open(os.path.join(CURRENT_PATH, config_address), 'rb') as f:
             self.config = tomllib.load(f)
             f.close()
         if 'longitude' not in self.config['location'] or 'latitude' not in self.config['location']:
@@ -53,7 +54,7 @@ class WeatherData:
 
     def find_api_key(self):
         path = self.config['weather']['api_key_path']
-        with open(path, 'rb') as f:
+        with open(os.path.join(CURRENT_PATH, path), 'rb') as f:
             self.config['weather']['api_key'] = str(f.read())[2:-1]
             f.close()
 
@@ -80,7 +81,7 @@ class WeatherData:
 
     def save(self):
         file_type = self.config['output']['file_type']
-        output_dir = self.config['output']['output_dir']
+        output_dir = os.path.join(CURRENT_PATH, self.config['output']['output_dir'])
         output_path = os.path.join(output_dir, self.data['dt'].strftime(self.config['output']['file_name']) + '.' + file_type)
         output_string = ""
         if file_type == 'json':
@@ -101,5 +102,6 @@ class WeatherData:
             f.close()
 
 if __name__ == "__main__":
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     weather_data = WeatherData(CONFIG_ADDRESS)
     weather_data.save()
